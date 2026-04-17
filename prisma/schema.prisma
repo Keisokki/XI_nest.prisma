@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id        Int      @id @default(autoincrement())
+  nis       String   @unique
+  name      String
+  email     String?  @unique
+  kelas     String
+  jurusan   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  loans     Loan[]
+}
+
+model Teacher {
+  id_guru   Int      @id @default(autoincrement())
+  nama_guru String
+  no_tlp    String
+  alamat    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Book {
+  id        Int      @id @default(autoincrement())
+  title     String
+  author    String
+  year      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  loans     Loan[]
+}
+
+model Loan {
+  id         Int       @id @default(autoincrement())
+  studentId  Int
+  bookId     Int
+  loanDate   DateTime  @default(now())
+  returnDate DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
+  book    Book    @relation(fields: [bookId], references: [id])
+  pengembalian Pengembalian[]
+}
+
+model Pengembalian {
+  id               Int      @id @default(autoincrement())
+  id_peminjaman    Int
+  tgl_pengembalian DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  loans Loan[]
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Petugas{
+  id        Int      @id @default(autoincrement())
+  nama      String
+  username  String   @unique
+  password  String
+  role      String   @default("petugas")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
