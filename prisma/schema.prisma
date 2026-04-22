@@ -45,16 +45,17 @@ model Book {
 }
 
 model Loan {
-  id         Int       @id @default(autoincrement())
-  studentId  Int
-  bookId     Int
-  loanDate   DateTime  @default(now())
-  returnDate DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id           Int      @id @default(autoincrement())
+  studentId    Int
+  bookId       Int
+  loanDate     DateTime @default(now())
+  returnDate   DateTime?
+  status       String   @default("DIPINJAM") 
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  student Student @relation(fields: [studentId], references: [id])
-  book    Book    @relation(fields: [bookId], references: [id])
+  student      Student        @relation(fields: [studentId], references: [id])
+  book         Book           @relation(fields: [bookId], references: [id])
   pengembalian Pengembalian[]
 }
 
